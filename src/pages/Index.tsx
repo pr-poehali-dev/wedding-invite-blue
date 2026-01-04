@@ -13,7 +13,7 @@ const Index = () => {
     seconds: 0
   });
 
-  const weddingDate = new Date('2026-06-20T15:00:00');
+  const weddingDate = new Date('2026-06-16T16:00:00');
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -37,23 +37,24 @@ const Index = () => {
   };
 
   const gallery = [
-    'https://cdn.poehali.dev/projects/6544f383-c294-4741-89f5-58f563538791/files/780d076f-d8f6-47af-9b16-137bc5be9d85.jpg',
-    'https://cdn.poehali.dev/projects/6544f383-c294-4741-89f5-58f563538791/files/6c3fc9df-6907-4628-be1d-f2da2067d02d.jpg',
-    'https://cdn.poehali.dev/projects/6544f383-c294-4741-89f5-58f563538791/files/b9e324d1-d1a2-4628-9f66-b8f5e0d441e5.jpg'
+    'https://cdn.poehali.dev/files/IMG_8773.jpeg',
+    'https://cdn.poehali.dev/files/IMG_8772.jpeg',
+    'https://cdn.poehali.dev/files/IMG_8770.jpeg',
+    'https://cdn.poehali.dev/files/IMG_8771.jpeg'
   ];
 
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-20%] right-[-10%] text-[40rem] font-bold text-primary/5 select-none animate-float">
+        <div className="absolute top-[-20%] right-[-10%] text-[40rem] font-bold text-primary/10 select-none animate-float">
           Е
         </div>
-        <div className="absolute bottom-[-20%] left-[-10%] text-[40rem] font-bold text-primary/5 select-none animate-float" style={{ animationDelay: '3s' }}>
+        <div className="absolute bottom-[-20%] left-[-10%] text-[40rem] font-bold text-primary/10 select-none animate-float" style={{ animationDelay: '3s' }}>
           Н
         </div>
       </div>
 
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border">
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-center items-center gap-8">
             {['Главная', 'О свадьбе', 'Детали', 'Программа', 'Галерея', 'Подтверждение', 'Контакты'].map((item) => (
@@ -71,9 +72,9 @@ const Index = () => {
 
       <section id="главная" className="min-h-screen flex items-center justify-center relative pt-20">
         <div className="container mx-auto px-4 text-center animate-fade-in">
-          <h1 className="text-8xl mb-6 text-primary">Е & Н</h1>
+          <h1 className="text-8xl mb-6 text-primary">Елизавета & Никита</h1>
           <p className="text-2xl mb-4 text-muted-foreground">приглашают на свадьбу</p>
-          <p className="text-xl mb-12 text-foreground/70">20 июня 2026 года</p>
+          <p className="text-xl mb-12 text-foreground/70">16 июня 2026 года</p>
           
           <div className="flex justify-center gap-8 mb-12">
             {[
@@ -118,20 +119,20 @@ const Index = () => {
             <Card className="p-8 text-center">
               <Icon name="Calendar" size={48} className="mx-auto mb-4 text-primary" />
               <h3 className="text-2xl mb-4">Дата</h3>
-              <p className="text-lg text-muted-foreground">20 июня 2026 года</p>
-              <p className="text-muted-foreground">Суббота</p>
+              <p className="text-lg text-muted-foreground">16 июня 2026 года</p>
+              <p className="text-muted-foreground">Понедельник</p>
             </Card>
             <Card className="p-8 text-center">
               <Icon name="Clock" size={48} className="mx-auto mb-4 text-primary" />
               <h3 className="text-2xl mb-4">Время</h3>
-              <p className="text-lg text-muted-foreground">15:00</p>
-              <p className="text-muted-foreground">Сбор гостей в 14:30</p>
+              <p className="text-lg text-muted-foreground">16:00</p>
+              <p className="text-muted-foreground">Сбор гостей в 15:30</p>
             </Card>
             <Card className="p-8 text-center">
               <Icon name="MapPin" size={48} className="mx-auto mb-4 text-primary" />
               <h3 className="text-2xl mb-4">Место проведения</h3>
-              <p className="text-lg text-muted-foreground">Банкетный зал "Счастье"</p>
-              <p className="text-muted-foreground">ул. Примерная, д. 123</p>
+              <p className="text-lg text-muted-foreground">Ресторан "Шато"</p>
+              <p className="text-muted-foreground">г. Омск, ул. 1-я Северная, 95В</p>
             </Card>
             <Card className="p-8 text-center">
               <Icon name="Shirt" size={48} className="mx-auto mb-4 text-primary" />
@@ -148,9 +149,8 @@ const Index = () => {
           <h2 className="text-6xl text-center mb-16 text-primary">Программа дня</h2>
           <div className="max-w-2xl mx-auto space-y-8">
             {[
-              { time: '14:30', title: 'Сбор гостей', desc: 'Приветствуем гостей и предлагаем welcome drink' },
-              { time: '15:00', title: 'Церемония', desc: 'Торжественная регистрация брака' },
-              { time: '16:00', title: 'Фуршет и фотосессия', desc: 'Легкие закуски и совместные фотографии' },
+              { time: '15:30', title: 'Сбор гостей', desc: 'Приветствуем гостей и предлагаем welcome drink' },
+              { time: '16:00', title: 'Выездная регистрация', desc: 'Торжественная церемония бракосочетания' },
               { time: '17:00', title: 'Банкет', desc: 'Праздничный ужин и развлекательная программа' },
               { time: '19:00', title: 'Первый танец', desc: 'Открытие танцпола молодоженами' },
               { time: '20:00', title: 'Торт и десерты', desc: 'Разрезание свадебного торта' },
@@ -171,7 +171,7 @@ const Index = () => {
       <section id="галерея" className="py-24 bg-card/50 relative">
         <div className="container mx-auto px-4">
           <h2 className="text-6xl text-center mb-16 text-primary">Наша история</h2>
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             {gallery.map((img, index) => (
               <div
                 key={index}
@@ -244,8 +244,8 @@ const Index = () => {
                 <div className="text-center text-muted-foreground">
                   <Icon name="MapPin" size={48} className="mx-auto mb-4" />
                   <p className="text-lg">Интерактивная карта</p>
-                  <p className="text-sm">Банкетный зал "Счастье"</p>
-                  <p className="text-sm">ул. Примерная, д. 123</p>
+                  <p className="text-sm">Ресторан "Шато"</p>
+                  <p className="text-sm">г. Омск, ул. 1-я Северная, 95В</p>
                 </div>
               </div>
               <div className="flex gap-4 justify-center">
@@ -265,8 +265,8 @@ const Index = () => {
 
       <footer className="py-12 text-center border-t border-border relative">
         <div className="container mx-auto px-4">
-          <p className="text-3xl mb-4 text-primary">Е & Н</p>
-          <p className="text-muted-foreground">20 июня 2026 года</p>
+          <p className="text-3xl mb-4 text-primary">Елизавета & Никита</p>
+          <p className="text-muted-foreground">16 июня 2026 года</p>
           <p className="text-sm text-muted-foreground mt-4">
             С любовью ждем вас на нашем празднике ❤️
           </p>
