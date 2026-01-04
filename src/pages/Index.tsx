@@ -328,13 +328,24 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-5xl text-center mb-16 text-primary">Контакты</h2>
           <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-1 gap-8 mb-12 max-w-md mx-auto">
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
               <Card className="p-8 text-center animate-fade-in">
                 <h3 className="text-2xl mb-4">Невеста</h3>
                 <p className="text-lg mb-2">Елизавета</p>
                 <p className="text-muted-foreground mb-4">+7 (951) 409-55-43</p>
                 <Button variant="outline" className="gap-2" asChild>
                   <a href="tel:+79514095543">
+                    <Icon name="Phone" size={18} />
+                    Позвонить
+                  </a>
+                </Button>
+              </Card>
+              <Card className="p-8 text-center animate-fade-in">
+                <h3 className="text-2xl mb-4">Жених</h3>
+                <p className="text-lg mb-2">Никита</p>
+                <p className="text-muted-foreground mb-4">+7 (999) 453-42-74</p>
+                <Button variant="outline" className="gap-2" asChild>
+                  <a href="tel:+79994534274">
                     <Icon name="Phone" size={18} />
                     Позвонить
                   </a>
