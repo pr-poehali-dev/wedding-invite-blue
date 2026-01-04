@@ -109,7 +109,7 @@ const Index = () => {
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div className="fixed inset-0 pointer-events-none z-0 flex items-center justify-center">
-        <div className="text-[12rem] font-bold text-primary/5 select-none leading-none">
+        <div className="text-[10rem] font-bold text-primary/5 select-none leading-none">
           Е&Н
         </div>
       </div>
