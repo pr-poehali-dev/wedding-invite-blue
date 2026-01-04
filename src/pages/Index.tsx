@@ -215,8 +215,11 @@ const Index = () => {
             <Card className="p-8 text-center md:col-span-2 animate-fade-in">
               <Icon name="Gift" size={48} className="mx-auto mb-4 text-primary" />
               <h3 className="text-xl mb-4">О подарках</h3>
+              <p className="text-base text-muted-foreground leading-relaxed mb-3">
+                Не ломайте голову над подарками! Ваши конверты помогут нам осуществить нашу мечту!
+              </p>
               <p className="text-base text-muted-foreground leading-relaxed">
-                Если Вы хотите дополнить свой подарок цветами, мы предлагаем прекрасную альтернативу. Поучаствуйте в создании нашей семейной алкогольной карты, заменив цветы бутылкой любого алкоголя с указанием имени дарителя.
+                У нас не будет возможности насладиться ароматом и красотой цветов, но мы будем рады алкогольной продукции с указанием имени дарителя, для нашей домашней коллекции.
               </p>
             </Card>
           </div>
