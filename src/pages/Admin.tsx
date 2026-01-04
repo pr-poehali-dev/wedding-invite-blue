@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import Icon from '@/components/ui/icon';
 import {
   Table,
@@ -22,6 +23,8 @@ interface Guest {
 }
 
 const Admin = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
   const [guests, setGuests] = useState<Guest[]>([]);
   const [totalResponses, setTotalResponses] = useState(0);
   const [totalGuests, setTotalGuests] = useState(0);
@@ -29,8 +32,36 @@ const Admin = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    loadGuests();
+    const savedAuth = sessionStorage.getItem('admin_auth');
+    if (savedAuth === 'true') {
+      setIsAuthenticated(true);
+      loadGuests();
+    } else {
+      setIsLoading(false);
+    }
   }, []);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Простой пароль для демонстрации - в продакшене должен быть бэкенд
+    if (password === 'wedding2025') {
+      setIsAuthenticated(true);
+      sessionStorage.setItem('admin_auth', 'true');
+      loadGuests();
+    } else {
+      toast({
+        title: 'Ошибка',
+        description: 'Неверный пароль',
+        variant: 'destructive'
+      });
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem('admin_auth');
+    setPassword('');
+  };
 
   const loadGuests = async () => {
     setIsLoading(true);
@@ -74,6 +105,34 @@ const Admin = () => {
     return acc;
   }, {} as Record<string, number>);
 
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center py-12">
+        <Card className="w-full max-w-md p-8">
+          <div className="text-center mb-6">
+            <Icon name="Lock" size={48} className="mx-auto text-primary mb-4" />
+            <h1 className="text-3xl font-bold text-primary mb-2">Вход в админ-панель</h1>
+            <p className="text-muted-foreground">Введите пароль для доступа</p>
+          </div>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <Input
+              type="password"
+              placeholder="Пароль"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="text-center text-lg"
+              autoFocus
+            />
+            <Button type="submit" className="w-full" size="lg">
+              <Icon name="LogIn" size={20} className="mr-2" />
+              Войти
+            </Button>
+          </form>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background py-12">
       <div className="container mx-auto px-4">
@@ -82,10 +141,16 @@ const Admin = () => {
             <h1 className="text-4xl font-bold text-primary mb-2">Админ-панель</h1>
             <p className="text-muted-foreground">Список подтвердивших гостей</p>
           </div>
-          <Button onClick={loadGuests} variant="outline" className="gap-2">
-            <Icon name="RefreshCw" size={18} />
-            Обновить
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={loadGuests} variant="outline" className="gap-2">
+              <Icon name="RefreshCw" size={18} />
+              Обновить
+            </Button>
+            <Button onClick={handleLogout} variant="outline" className="gap-2">
+              <Icon name="LogOut" size={18} />
+              Выйти
+            </Button>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6 mb-8">
