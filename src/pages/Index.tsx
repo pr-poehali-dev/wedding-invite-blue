@@ -109,7 +109,7 @@ const Index = () => {
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div className="fixed inset-0 pointer-events-none z-0 flex items-center justify-center">
-        <div className="text-[20rem] font-bold text-primary/5 select-none leading-none">
+        <div className="text-[12rem] font-bold text-primary/5 select-none leading-none">
           Е&Н
         </div>
       </div>
@@ -339,35 +339,7 @@ const Index = () => {
               </Card>
             </div>
 
-            <Card className="p-8">
-              <h3 className="text-2xl mb-6 text-center">Как добраться</h3>
-              <div className="aspect-video rounded-lg mb-6 overflow-hidden">
-                <iframe
-                  src="https://yandex.ru/map-widget/v1/?um=constructor%3A5f7d8e9c0a1b2c3d4e5f6a7b8c9d0e1f2&amp;source=constructor"
-                  width="100%"
-                  height="100%"
-                  frameBorder="0"
-                  title="Карта Летняя веранда Шато"
-                  style={{ border: 0 }}
-                />
-              </div>
-              <div className="text-center mb-6">
-                <p className="text-lg font-medium mb-2">Летняя веранда «Шато»</p>
-                <p className="text-muted-foreground">ул. 1-ая Северная 95В, Омск</p>
-              </div>
-              <div className="flex gap-4 justify-center">
-                <Button variant="outline" className="gap-2" asChild>
-                  <a href="https://yandex.ru/maps/?text=Омск, улица 1-я Северная, 95В" target="_blank" rel="noopener noreferrer">
-                    <Icon name="Navigation" size={18} />
-                    Открыть в картах
-                  </a>
-                </Button>
-                <Button variant="outline" className="gap-2">
-                  <Icon name="Car" size={18} />
-                  Парковка рядом
-                </Button>
-              </div>
-            </Card>
+
           </div>
         </div>
       </section>
