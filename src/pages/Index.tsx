@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
   const [timeLeft, setTimeLeft] = useState({
@@ -12,6 +13,15 @@ const Index = () => {
     minutes: 0,
     seconds: 0
   });
+
+  const [formData, setFormData] = useState({
+    name: '',
+    guests: '1',
+    comment: ''
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
 
   const weddingDate = new Date('2026-06-16T16:00:00');
 
@@ -37,17 +47,62 @@ const Index = () => {
   };
 
   const gallery = [
-    'https://cdn.poehali.dev/files/IMG_8773.jpeg',
+    'https://cdn.poehali.dev/files/IMG_8771.jpeg',
     'https://cdn.poehali.dev/files/IMG_8772.jpeg',
-    'https://cdn.poehali.dev/files/IMG_8770.jpeg',
-    'https://cdn.poehali.dev/files/IMG_8771.jpeg'
+    'https://cdn.poehali.dev/files/IMG_8770.jpeg'
   ];
 
   const dressCodeColors = [
-    { name: 'Синий', hex: '#1e3a8a' },
-    { name: 'Бежевый', hex: '#d4b896' },
-    { name: 'Золотой', hex: '#d4af37' }
+    { name: 'Тёмно-синий', hex: '#1a3a52' },
+    { name: 'Синий', hex: '#4a6fa5' },
+    { name: 'Серо-голубой', hex: '#7d9ec0' },
+    { name: 'Светло-голубой', hex: '#a8c5e0' }
   ];
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.name.trim()) {
+      toast({
+        title: 'Ошибка',
+        description: 'Пожалуйста, укажите ваше имя',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('https://functions.poehali.dev/73b1af17-d463-42f4-be57-6cb3b190a40f', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: 'Спасибо!',
+          description: 'Ваше подтверждение принято. Ждём вас на празднике! ❤️'
+        });
+        setFormData({ name: '', guests: '1', comment: '' });
+      } else {
+        throw new Error(result.error || 'Ошибка отправки');
+      }
+    } catch (error) {
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось отправить подтверждение. Попробуйте позже.',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -179,9 +234,7 @@ const Index = () => {
               { time: '15:30', title: 'Сбор гостей', desc: 'Приветствуем гостей и предлагаем welcome drink' },
               { time: '16:00', title: 'Выездная регистрация', desc: 'Торжественная церемония бракосочетания' },
               { time: '17:00', title: 'Банкет', desc: 'Праздничный ужин и развлекательная программа' },
-              { time: '19:00', title: 'Первый танец', desc: 'Открытие танцпола молодоженами' },
-              { time: '20:00', title: 'Торт и десерты', desc: 'Разрезание свадебного торта' },
-              { time: '21:00', title: 'Танцы до утра', desc: 'Дискотека и веселье' }
+              { time: '23:00', title: 'Завершение банкета', desc: 'Благодарим за этот чудесный день' }
             ].map((item, index) => (
               <div key={index} className="flex gap-6 items-start animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
                 <div className="text-3xl font-bold text-primary min-w-[100px]">{item.time}</div>
@@ -197,8 +250,8 @@ const Index = () => {
 
       <section id="галерея" className="py-24 bg-card/50 relative">
         <div className="container mx-auto px-4">
-          <h2 className="text-6xl text-center mb-16 text-primary">Наша история</h2>
-          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+          <h2 className="text-6xl text-center mb-16 text-primary">Наша любовь в фотографиях</h2>
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {gallery.map((img, index) => (
               <div
                 key={index}
@@ -219,21 +272,37 @@ const Index = () => {
             <p className="text-center text-muted-foreground mb-8">
               Пожалуйста, подтвердите ваше присутствие до 1 июня 2026 года
             </p>
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label className="block text-sm font-medium mb-2">Ваше имя</label>
-                <Input placeholder="Иван Иванов" />
+                <Input 
+                  placeholder="Иван Иванов"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Количество гостей</label>
-                <Input type="number" placeholder="1" min="1" />
+                <Input 
+                  type="number" 
+                  placeholder="1" 
+                  min="1"
+                  value={formData.guests}
+                  onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
+                  required
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Комментарий (необязательно)</label>
-                <Textarea placeholder="Особые пожелания или диетические ограничения" />
+                <Textarea 
+                  placeholder="Особые пожелания или диетические ограничения"
+                  value={formData.comment}
+                  onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
+                />
               </div>
-              <Button className="w-full" size="lg">
-                Подтвердить присутствие
+              <Button className="w-full" size="lg" type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Отправка...' : 'Подтвердить присутствие'}
               </Button>
             </form>
           </Card>
@@ -249,9 +318,11 @@ const Index = () => {
                 <h3 className="text-2xl mb-4">Невеста</h3>
                 <p className="text-lg mb-2">Елизавета</p>
                 <p className="text-muted-foreground mb-4">+7 (951) 409-55-43</p>
-                <Button variant="outline" className="gap-2">
-                  <Icon name="Phone" size={18} />
-                  Позвонить
+                <Button variant="outline" className="gap-2" asChild>
+                  <a href="tel:+79514095543">
+                    <Icon name="Phone" size={18} />
+                    Позвонить
+                  </a>
                 </Button>
               </Card>
             </div>

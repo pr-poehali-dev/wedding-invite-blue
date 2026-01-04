@@ -1,0 +1,47 @@
+{
+  "tests": [
+    {
+      "name": "Успешное подтверждение присутствия",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "name": "Иван Иванов",
+        "guests": "2",
+        "comment": "Без особых пожеланий"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Отсутствие имени",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "name": "",
+        "guests": "1"
+      },
+      "expectedStatus": 400,
+      "expectedBody": {
+        "error": "string"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Некорректное количество гостей",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "name": "Пётр Петров",
+        "guests": "0"
+      },
+      "expectedStatus": 400,
+      "expectedBody": {
+        "error": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
