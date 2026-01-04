@@ -109,10 +109,10 @@ const Index = () => {
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[20%] left-[50%] -translate-x-[60%] text-[18rem] font-serif italic text-primary/5 select-none animate-float">
+        <div className="absolute top-[15%] left-[50%] -translate-x-[50%] text-[16rem] font-bold text-primary/8 select-none animate-float">
           Е
         </div>
-        <div className="absolute bottom-[20%] left-[50%] -translate-x-[40%] text-[18rem] font-serif italic text-primary/5 select-none animate-float" style={{ animationDelay: '3s' }}>
+        <div className="absolute bottom-[15%] left-[50%] -translate-x-[50%] text-[16rem] font-bold text-primary/8 select-none animate-float" style={{ animationDelay: '3s' }}>
           Н
         </div>
       </div>
@@ -191,11 +191,21 @@ const Index = () => {
               <p className="text-lg text-muted-foreground">16:00</p>
               <p className="text-muted-foreground">Сбор гостей в 15:30</p>
             </Card>
-            <Card className="p-8 text-center">
+            <Card className="p-8 text-center md:col-span-2">
               <Icon name="MapPin" size={48} className="mx-auto mb-4 text-primary" />
               <h3 className="text-xl mb-4">Место проведения</h3>
-              <p className="text-lg text-muted-foreground">Летняя веранда «Шато»</p>
-              <p className="text-muted-foreground">ул. 1-ая Северная 95В</p>
+              <p className="text-lg text-muted-foreground mb-2">Летняя веранда «Шато»</p>
+              <p className="text-muted-foreground mb-4">ул. 1-ая Северная 95В</p>
+              <div className="w-full h-[300px] rounded-lg overflow-hidden mt-4">
+                <iframe
+                  src="https://yandex.ru/map-widget/v1/?ll=82.903661%2C55.023687&z=16&l=map&pt=82.903661,55.023687,pm2rdm"
+                  width="100%"
+                  height="100%"
+                  frameBorder="0"
+                  allowFullScreen
+                  style={{ position: 'relative' }}
+                ></iframe>
+              </div>
             </Card>
             <Card className="p-8 text-center">
               <Icon name="Shirt" size={48} className="mx-auto mb-4 text-primary" />
