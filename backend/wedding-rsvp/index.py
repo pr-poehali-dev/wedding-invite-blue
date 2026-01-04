@@ -38,7 +38,13 @@ def handler(event: dict, context) -> dict:
         name = body.get('name', '').strip()
         guests = body.get('guests', '1')
         comment = body.get('comment', '').strip()
-        alcohol = body.get('alcohol', '').strip()
+        alcohol = body.get('alcohol', [])
+        
+        # Преобразуем массив в строку через запятую
+        if isinstance(alcohol, list):
+            alcohol_str = ', '.join(alcohol) if alcohol else ''
+        else:
+            alcohol_str = str(alcohol).strip()
         
         if not name:
             return {
@@ -76,7 +82,7 @@ def handler(event: dict, context) -> dict:
             INSERT INTO {schema}.wedding_guests (name, guests, alcohol, comment)
             VALUES (%s, %s, %s, %s)
         """
-        cur.execute(insert_query, (name, guests_count, alcohol if alcohol else None, comment if comment else None))
+        cur.execute(insert_query, (name, guests_count, alcohol_str if alcohol_str else None, comment if comment else None))
         conn.commit()
         
         cur.close()

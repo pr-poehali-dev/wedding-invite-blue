@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
@@ -19,7 +19,7 @@ const Index = () => {
     name: '',
     guests: '1',
     comment: '',
-    alcohol: ''
+    alcohol: [] as string[]
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -288,19 +288,27 @@ const Index = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Предпочтение в алкоголе</label>
-                <Select value={formData.alcohol} onValueChange={(value) => setFormData({ ...formData, alcohol: value })}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Выберите напиток" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Коньяк">Коньяк</SelectItem>
-                    <SelectItem value="Виски">Виски</SelectItem>
-                    <SelectItem value="Вино">Вино</SelectItem>
-                    <SelectItem value="Шампанское">Шампанское</SelectItem>
-                    <SelectItem value="Водка">Водка</SelectItem>
-                  </SelectContent>
-                </Select>
+                <label className="block text-sm font-medium mb-4">Предпочтения в алкоголе (можно выбрать несколько)</label>
+                <div className="space-y-3">
+                  {['Коньяк', 'Виски', 'Вино', 'Шампанское', 'Водка'].map((drink) => (
+                    <div key={drink} className="flex items-center space-x-3">
+                      <Checkbox
+                        id={drink}
+                        checked={formData.alcohol.includes(drink)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setFormData({ ...formData, alcohol: [...formData.alcohol, drink] });
+                          } else {
+                            setFormData({ ...formData, alcohol: formData.alcohol.filter(a => a !== drink) });
+                          }
+                        }}
+                      />
+                      <label htmlFor={drink} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">
+                        {drink}
+                      </label>
+                    </div>
+                  ))}
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Комментарий (необязательно)</label>
