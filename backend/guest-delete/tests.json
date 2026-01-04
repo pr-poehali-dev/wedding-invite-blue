@@ -1,0 +1,28 @@
+{
+  "tests": [
+    {
+      "name": "Удаление несуществующего гостя",
+      "method": "DELETE",
+      "path": "/",
+      "body": {
+        "guest_id": 999999
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Отсутствие ID гостя",
+      "method": "DELETE",
+      "path": "/",
+      "body": {},
+      "expectedStatus": 400,
+      "expectedBody": {
+        "error": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

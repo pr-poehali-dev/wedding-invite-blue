@@ -1,4 +1,5 @@
 {
+  "guest-delete": "https://functions.poehali.dev/32c28659-d7a4-4c4e-bf24-5f8b9bc5a0f6",
   "guests-get": "https://functions.poehali.dev/51d70743-25cc-4318-9f00-048687153b31",
   "wedding-admin": "https://functions.poehali.dev/3483cd4c-bc8a-4541-b2ff-daf458af7499",
   "wedding-rsvp": "https://functions.poehali.dev/73b1af17-d463-42f4-be57-6cb3b190a40f"

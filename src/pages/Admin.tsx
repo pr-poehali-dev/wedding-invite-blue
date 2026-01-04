@@ -87,6 +87,40 @@ const Admin = () => {
     }
   };
 
+  const deleteGuest = async (guestId: number, guestName: string) => {
+    if (!confirm(`Удалить гостя "${guestName}"?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch('https://functions.poehali.dev/32c28659-d7a4-4c4e-bf24-5f8b9bc5a0f6', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ guest_id: guestId })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast({
+          title: 'Успешно',
+          description: 'Гость удалён'
+        });
+        loadGuests();
+      } else {
+        throw new Error(data.error || 'Ошибка удаления');
+      }
+    } catch (error) {
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось удалить гостя',
+        variant: 'destructive'
+      });
+    }
+  };
+
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     return date.toLocaleString('ru-RU', {
@@ -229,6 +263,7 @@ const Admin = () => {
                   <TableHead>Предпочтение в алкоголе</TableHead>
                   <TableHead>Комментарий</TableHead>
                   <TableHead>Дата подтверждения</TableHead>
+                  <TableHead>Действия</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -256,6 +291,16 @@ const Admin = () => {
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
                       {formatDate(guest.created_at)}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => deleteGuest(guest.id, guest.name)}
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      >
+                        <Icon name="Trash2" size={16} />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
