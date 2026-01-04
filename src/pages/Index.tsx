@@ -108,6 +108,14 @@ const Index = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-[20%] left-[50%] -translate-x-[60%] text-[18rem] font-serif italic text-primary/5 select-none animate-float">
+          Е
+        </div>
+        <div className="absolute bottom-[20%] left-[50%] -translate-x-[40%] text-[18rem] font-serif italic text-primary/5 select-none animate-float" style={{ animationDelay: '3s' }}>
+          Н
+        </div>
+      </div>
 
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border">
         <div className="container mx-auto px-4 py-4">
