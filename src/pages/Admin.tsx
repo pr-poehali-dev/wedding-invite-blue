@@ -66,7 +66,7 @@ const Admin = () => {
   const loadGuests = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('https://functions.poehali.dev/3483cd4c-bc8a-4541-b2ff-daf458af7499');
+      const response = await fetch('https://functions.poehali.dev/51d70743-25cc-4318-9f00-048687153b31');
       const data = await response.json();
 
       if (data.success) {
