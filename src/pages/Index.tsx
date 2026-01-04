@@ -43,13 +43,19 @@ const Index = () => {
     'https://cdn.poehali.dev/files/IMG_8771.jpeg'
   ];
 
+  const dressCodeColors = [
+    { name: 'Синий', hex: '#1e3a8a' },
+    { name: 'Бежевый', hex: '#d4b896' },
+    { name: 'Золотой', hex: '#d4af37' }
+  ];
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-20%] right-[-10%] text-[40rem] font-bold text-primary/10 select-none animate-float">
+        <div className="absolute top-[-10%] right-[5%] text-[20rem] font-bold text-primary/10 select-none animate-float">
           Е
         </div>
-        <div className="absolute bottom-[-20%] left-[-10%] text-[40rem] font-bold text-primary/10 select-none animate-float" style={{ animationDelay: '3s' }}>
+        <div className="absolute bottom-[-10%] left-[5%] text-[20rem] font-bold text-primary/10 select-none animate-float" style={{ animationDelay: '3s' }}>
           Н
         </div>
       </div>
@@ -115,12 +121,12 @@ const Index = () => {
       <section id="детали" className="py-24 bg-card/50 relative">
         <div className="container mx-auto px-4">
           <h2 className="text-6xl text-center mb-16 text-primary">Детали</h2>
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             <Card className="p-8 text-center">
               <Icon name="Calendar" size={48} className="mx-auto mb-4 text-primary" />
               <h3 className="text-2xl mb-4">Дата</h3>
               <p className="text-lg text-muted-foreground">16 июня 2026 года</p>
-              <p className="text-muted-foreground">Понедельник</p>
+              <p className="text-muted-foreground">Вторник</p>
             </Card>
             <Card className="p-8 text-center">
               <Icon name="Clock" size={48} className="mx-auto mb-4 text-primary" />
@@ -131,14 +137,35 @@ const Index = () => {
             <Card className="p-8 text-center">
               <Icon name="MapPin" size={48} className="mx-auto mb-4 text-primary" />
               <h3 className="text-2xl mb-4">Место проведения</h3>
-              <p className="text-lg text-muted-foreground">Ресторан "Шато"</p>
-              <p className="text-muted-foreground">г. Омск, ул. 1-я Северная, 95В</p>
+              <p className="text-lg text-muted-foreground">Летняя веранда «Шато»</p>
+              <p className="text-muted-foreground">ул. 1-ая Северная 95В</p>
             </Card>
             <Card className="p-8 text-center">
               <Icon name="Shirt" size={48} className="mx-auto mb-4 text-primary" />
               <h3 className="text-2xl mb-4">Дресс-код</h3>
-              <p className="text-lg text-muted-foreground">Формальный стиль</p>
-              <p className="text-muted-foreground">Синие оттенки приветствуются</p>
+              <p className="text-base text-muted-foreground mb-4">
+                Мы будем очень признательны, если вы используете цвета нашей свадьбы в своих образах
+              </p>
+              <div className="flex justify-center gap-3">
+                {dressCodeColors.map((color) => (
+                  <div key={color.name} className="text-center">
+                    <div 
+                      className="w-16 h-16 rounded-full mx-auto mb-2 border-2 border-border"
+                      style={{ backgroundColor: color.hex }}
+                    />
+                    <p className="text-xs text-muted-foreground">{color.name}</p>
+                  </div>
+                ))}
+              </div>
+            </Card>
+            <Card className="p-8 text-center md:col-span-2">
+              <Icon name="Gift" size={48} className="mx-auto mb-4 text-primary" />
+              <h3 className="text-2xl mb-4">О подарках</h3>
+              <p className="text-base text-muted-foreground leading-relaxed">
+                Если Вы хотите сделать нам подарок в виде цветов, мы предлагаем прекрасную альтернативу. 
+                Поучаствуйте в создании нашей семейной алкогольной карты, заменив цветы бутылкой любого алкоголя 
+                с указанием имени дарителя.
+              </p>
             </Card>
           </div>
         </div>
@@ -175,10 +202,10 @@ const Index = () => {
             {gallery.map((img, index) => (
               <div
                 key={index}
-                className="aspect-square overflow-hidden rounded-lg animate-fade-in hover:scale-105 transition-transform duration-300"
+                className="aspect-[3/4] overflow-hidden rounded-lg animate-fade-in hover:scale-105 transition-transform duration-300"
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
-                <img src={img} alt={`Фото ${index + 1}`} className="w-full h-full object-cover" />
+                <img src={img} alt={`Фото ${index + 1}`} className="w-full h-full object-cover object-top" />
               </div>
             ))}
           </div>
@@ -217,41 +244,40 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-6xl text-center mb-16 text-primary">Контакты</h2>
           <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-8 mb-12">
+            <div className="grid md:grid-cols-1 gap-8 mb-12 max-w-md mx-auto">
               <Card className="p-8 text-center">
-                <h3 className="text-2xl mb-4">Координатор</h3>
-                <p className="text-lg mb-2">Анна Смирнова</p>
-                <p className="text-muted-foreground mb-4">+7 (999) 123-45-67</p>
+                <h3 className="text-2xl mb-4">Невеста</h3>
+                <p className="text-lg mb-2">Елизавета</p>
+                <p className="text-muted-foreground mb-4">+7 (951) 409-55-43</p>
                 <Button variant="outline" className="gap-2">
                   <Icon name="Phone" size={18} />
                   Позвонить
-                </Button>
-              </Card>
-              <Card className="p-8 text-center">
-                <h3 className="text-2xl mb-4">По вопросам</h3>
-                <p className="text-lg mb-2">wedding@example.com</p>
-                <p className="text-muted-foreground mb-4">Ответим в течение 24 часов</p>
-                <Button variant="outline" className="gap-2">
-                  <Icon name="Mail" size={18} />
-                  Написать
                 </Button>
               </Card>
             </div>
 
             <Card className="p-8">
               <h3 className="text-2xl mb-6 text-center">Как добраться</h3>
-              <div className="aspect-video bg-muted rounded-lg mb-6 flex items-center justify-center">
-                <div className="text-center text-muted-foreground">
-                  <Icon name="MapPin" size={48} className="mx-auto mb-4" />
-                  <p className="text-lg">Интерактивная карта</p>
-                  <p className="text-sm">Ресторан "Шато"</p>
-                  <p className="text-sm">г. Омск, ул. 1-я Северная, 95В</p>
-                </div>
+              <div className="aspect-video rounded-lg mb-6 overflow-hidden">
+                <iframe
+                  src="https://yandex.ru/map-widget/v1/?um=constructor%3A5f7d8e9c0a1b2c3d4e5f6a7b8c9d0e1f2&amp;source=constructor"
+                  width="100%"
+                  height="100%"
+                  frameBorder="0"
+                  title="Карта Летняя веранда Шато"
+                  style={{ border: 0 }}
+                />
+              </div>
+              <div className="text-center mb-6">
+                <p className="text-lg font-medium mb-2">Летняя веранда «Шато»</p>
+                <p className="text-muted-foreground">ул. 1-ая Северная 95В, Омск</p>
               </div>
               <div className="flex gap-4 justify-center">
-                <Button variant="outline" className="gap-2">
-                  <Icon name="Navigation" size={18} />
-                  Открыть в картах
+                <Button variant="outline" className="gap-2" asChild>
+                  <a href="https://yandex.ru/maps/?text=Омск, улица 1-я Северная, 95В" target="_blank" rel="noopener noreferrer">
+                    <Icon name="Navigation" size={18} />
+                    Открыть в картах
+                  </a>
                 </Button>
                 <Button variant="outline" className="gap-2">
                   <Icon name="Car" size={18} />
