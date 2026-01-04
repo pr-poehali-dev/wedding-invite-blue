@@ -99,8 +99,10 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: "Dancing Script", cursive;
-    font-style: italic;
+    font-family: "Cormorant", serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1,
@@ -111,6 +113,6 @@
   h6 {
     font-family: "Dancing Script", cursive;
     font-weight: 600;
-    font-style: italic;
+    font-style: normal;
   }
 }
