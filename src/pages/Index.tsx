@@ -91,7 +91,7 @@ const Index = () => {
           title: 'Спасибо!',
           description: 'Ваше подтверждение принято. Ждём вас на празднике! ❤️'
         });
-        setFormData({ name: '', guests: '1', comment: '', alcohol: '' });
+        setFormData({ name: '', guests: '1', comment: '', alcohol: [] });
       } else {
         throw new Error(result.error || 'Ошибка отправки');
       }
