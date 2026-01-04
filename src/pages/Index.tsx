@@ -109,10 +109,14 @@ const Index = () => {
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div className="fixed inset-0 pointer-events-none z-0 flex items-center justify-center">
-        <div className="text-[10rem] font-bold text-primary/5 select-none leading-none">
-          Е&Н
+        <div className="text-[10rem] font-bold text-primary/5 select-none leading-tight text-center">
+          Е<br />Н
         </div>
       </div>
+
+      <audio autoPlay loop>
+        <source src="https://cdn.poehali.dev/files/wedding-music.mp3" type="audio/mpeg" />
+      </audio>
 
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border">
         <div className="container mx-auto px-4 py-4">
@@ -176,25 +180,25 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-5xl text-center mb-16 text-primary">Детали</h2>
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <Card className="p-8 text-center">
+            <Card className="p-8 text-center animate-fade-in">
               <Icon name="Calendar" size={48} className="mx-auto mb-4 text-primary" />
               <h3 className="text-xl mb-4">Дата</h3>
               <p className="text-lg text-muted-foreground">16 июня 2026 года</p>
               <p className="text-muted-foreground">Вторник</p>
             </Card>
-            <Card className="p-8 text-center">
+            <Card className="p-8 text-center animate-fade-in">
               <Icon name="Clock" size={48} className="mx-auto mb-4 text-primary" />
               <h3 className="text-xl mb-4">Время</h3>
               <p className="text-lg text-muted-foreground">16:00</p>
               <p className="text-muted-foreground">Сбор гостей в 15:30</p>
             </Card>
-            <Card className="p-8 text-center">
+            <Card className="p-8 text-center animate-fade-in">
               <Icon name="MapPin" size={48} className="mx-auto mb-4 text-primary" />
               <h3 className="text-xl mb-4">Место проведения</h3>
               <p className="text-lg text-muted-foreground">Летняя веранда «Шато»</p>
               <p className="text-muted-foreground">ул. 1-ая Северная 95В</p>
             </Card>
-            <Card className="p-8 text-center">
+            <Card className="p-8 text-center animate-fade-in">
               <Icon name="Shirt" size={48} className="mx-auto mb-4 text-primary" />
               <h3 className="text-xl mb-4">Дресс-код</h3>
               <p className="text-base text-muted-foreground mb-4">
@@ -212,7 +216,7 @@ const Index = () => {
                 ))}
               </div>
             </Card>
-            <Card className="p-8 text-center md:col-span-2">
+            <Card className="p-8 text-center md:col-span-2 animate-fade-in">
               <Icon name="Gift" size={48} className="mx-auto mb-4 text-primary" />
               <h3 className="text-xl mb-4">О подарках</h3>
               <p className="text-base text-muted-foreground leading-relaxed">
@@ -265,7 +269,7 @@ const Index = () => {
       <section id="подтверждение" className="py-24 relative">
         <div className="container mx-auto px-4">
           <h2 className="text-5xl text-center mb-16 text-primary">Подтверждение присутствия</h2>
-          <Card className="max-w-xl mx-auto p-8">
+          <Card className="max-w-xl mx-auto p-8 animate-fade-in">
             <p className="text-center text-muted-foreground mb-8">
               Пожалуйста, подтвердите ваше присутствие до 1 июня 2026 года
             </p>
@@ -326,7 +330,7 @@ const Index = () => {
           <h2 className="text-5xl text-center mb-16 text-primary">Контакты</h2>
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-1 gap-8 mb-12 max-w-md mx-auto">
-              <Card className="p-8 text-center">
+              <Card className="p-8 text-center animate-fade-in">
                 <h3 className="text-2xl mb-4">Невеста</h3>
                 <p className="text-lg mb-2">Елизавета</p>
                 <p className="text-muted-foreground mb-4">+7 (951) 409-55-43</p>
