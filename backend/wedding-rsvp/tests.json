@@ -7,6 +7,7 @@
       "body": {
         "name": "Иван Иванов",
         "guests": "2",
+        "alcohol": "Коньяк",
         "comment": "Без особых пожеланий"
       },
       "expectedStatus": 200,
@@ -21,7 +22,8 @@
       "path": "/",
       "body": {
         "name": "",
-        "guests": "1"
+        "guests": "1",
+        "alcohol": "Вино"
       },
       "expectedStatus": 400,
       "expectedBody": {
@@ -35,7 +37,8 @@
       "path": "/",
       "body": {
         "name": "Пётр Петров",
-        "guests": "0"
+        "guests": "0",
+        "alcohol": "Водка"
       },
       "expectedStatus": 400,
       "expectedBody": {

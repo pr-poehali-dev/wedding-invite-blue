@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
@@ -17,7 +18,8 @@ const Index = () => {
   const [formData, setFormData] = useState({
     name: '',
     guests: '1',
-    comment: ''
+    comment: '',
+    alcohol: ''
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -89,7 +91,7 @@ const Index = () => {
           title: 'Спасибо!',
           description: 'Ваше подтверждение принято. Ждём вас на празднике! ❤️'
         });
-        setFormData({ name: '', guests: '1', comment: '' });
+        setFormData({ name: '', guests: '1', comment: '', alcohol: '' });
       } else {
         throw new Error(result.error || 'Ошибка отправки');
       }
@@ -133,7 +135,7 @@ const Index = () => {
 
       <section id="главная" className="min-h-screen flex items-center justify-center relative pt-20">
         <div className="container mx-auto px-4 text-center animate-fade-in">
-          <h1 className="text-8xl mb-6 text-primary">Елизавета & Никита</h1>
+          <h1 className="text-7xl mb-6 text-primary">Елизавета & Никита</h1>
           <p className="text-2xl mb-4 text-muted-foreground">приглашают на свадьбу</p>
           <p className="text-xl mb-12 text-foreground/70">16 июня 2026 года</p>
           
@@ -159,7 +161,7 @@ const Index = () => {
 
       <section id="о свадьбе" className="py-24 relative">
         <div className="container mx-auto px-4">
-          <h2 className="text-6xl text-center mb-16 text-primary">О нашей свадьбе</h2>
+          <h2 className="text-5xl text-center mb-16 text-primary">О нашей свадьбе</h2>
           <div className="max-w-3xl mx-auto text-center">
             <p className="text-xl text-foreground/80 leading-relaxed mb-8">
               Мы рады пригласить вас разделить с нами самый важный день в нашей жизни. 
@@ -175,29 +177,29 @@ const Index = () => {
 
       <section id="детали" className="py-24 bg-card/50 relative">
         <div className="container mx-auto px-4">
-          <h2 className="text-6xl text-center mb-16 text-primary">Детали</h2>
+          <h2 className="text-5xl text-center mb-16 text-primary">Детали</h2>
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             <Card className="p-8 text-center">
               <Icon name="Calendar" size={48} className="mx-auto mb-4 text-primary" />
-              <h3 className="text-2xl mb-4">Дата</h3>
+              <h3 className="text-xl mb-4">Дата</h3>
               <p className="text-lg text-muted-foreground">16 июня 2026 года</p>
               <p className="text-muted-foreground">Вторник</p>
             </Card>
             <Card className="p-8 text-center">
               <Icon name="Clock" size={48} className="mx-auto mb-4 text-primary" />
-              <h3 className="text-2xl mb-4">Время</h3>
+              <h3 className="text-xl mb-4">Время</h3>
               <p className="text-lg text-muted-foreground">16:00</p>
               <p className="text-muted-foreground">Сбор гостей в 15:30</p>
             </Card>
             <Card className="p-8 text-center">
               <Icon name="MapPin" size={48} className="mx-auto mb-4 text-primary" />
-              <h3 className="text-2xl mb-4">Место проведения</h3>
+              <h3 className="text-xl mb-4">Место проведения</h3>
               <p className="text-lg text-muted-foreground">Летняя веранда «Шато»</p>
               <p className="text-muted-foreground">ул. 1-ая Северная 95В</p>
             </Card>
             <Card className="p-8 text-center">
               <Icon name="Shirt" size={48} className="mx-auto mb-4 text-primary" />
-              <h3 className="text-2xl mb-4">Дресс-код</h3>
+              <h3 className="text-xl mb-4">Дресс-код</h3>
               <p className="text-base text-muted-foreground mb-4">
                 Мы будем очень признательны, если вы используете цвета нашей свадьбы в своих образах
               </p>
@@ -215,11 +217,9 @@ const Index = () => {
             </Card>
             <Card className="p-8 text-center md:col-span-2">
               <Icon name="Gift" size={48} className="mx-auto mb-4 text-primary" />
-              <h3 className="text-2xl mb-4">О подарках</h3>
+              <h3 className="text-xl mb-4">О подарках</h3>
               <p className="text-base text-muted-foreground leading-relaxed">
-                Если Вы хотите сделать нам подарок в виде цветов, мы предлагаем прекрасную альтернативу. 
-                Поучаствуйте в создании нашей семейной алкогольной карты, заменив цветы бутылкой любого алкоголя 
-                с указанием имени дарителя.
+                Если Вы хотите дополнить свой подарок цветами, мы предлагаем прекрасную альтернативу. Поучаствуйте в создании нашей семейной алкогольной карты, заменив цветы бутылкой любого алкоголя с указанием имени дарителя.
               </p>
             </Card>
           </div>
@@ -228,10 +228,10 @@ const Index = () => {
 
       <section id="программа" className="py-24 relative">
         <div className="container mx-auto px-4">
-          <h2 className="text-6xl text-center mb-16 text-primary">Программа дня</h2>
+          <h2 className="text-5xl text-center mb-16 text-primary">Программа дня</h2>
           <div className="max-w-2xl mx-auto space-y-8">
             {[
-              { time: '15:30', title: 'Сбор гостей', desc: 'Приветствуем гостей и предлагаем welcome drink' },
+              { time: '15:30', title: 'Сбор гостей', desc: '' },
               { time: '16:00', title: 'Выездная регистрация', desc: 'Торжественная церемония бракосочетания' },
               { time: '17:00', title: 'Банкет', desc: 'Праздничный ужин и развлекательная программа' },
               { time: '23:00', title: 'Завершение банкета', desc: 'Благодарим за этот чудесный день' }
@@ -239,7 +239,7 @@ const Index = () => {
               <div key={index} className="flex gap-6 items-start animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
                 <div className="text-3xl font-bold text-primary min-w-[100px]">{item.time}</div>
                 <div className="flex-1">
-                  <h3 className="text-2xl mb-2">{item.title}</h3>
+                  <h3 className="text-xl mb-2">{item.title}</h3>
                   <p className="text-muted-foreground">{item.desc}</p>
                 </div>
               </div>
@@ -250,7 +250,7 @@ const Index = () => {
 
       <section id="галерея" className="py-24 bg-card/50 relative">
         <div className="container mx-auto px-4">
-          <h2 className="text-6xl text-center mb-16 text-primary">Наша любовь в фотографиях</h2>
+          <h2 className="text-5xl text-center mb-16 text-primary">Наша любовь в фотографиях</h2>
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {gallery.map((img, index) => (
               <div
@@ -267,7 +267,7 @@ const Index = () => {
 
       <section id="подтверждение" className="py-24 relative">
         <div className="container mx-auto px-4">
-          <h2 className="text-6xl text-center mb-16 text-primary">Подтверждение присутствия</h2>
+          <h2 className="text-5xl text-center mb-16 text-primary">Подтверждение присутствия</h2>
           <Card className="max-w-xl mx-auto p-8">
             <p className="text-center text-muted-foreground mb-8">
               Пожалуйста, подтвердите ваше присутствие до 1 июня 2026 года
@@ -294,6 +294,21 @@ const Index = () => {
                 />
               </div>
               <div>
+                <label className="block text-sm font-medium mb-2">Предпочтение в алкоголе</label>
+                <Select value={formData.alcohol} onValueChange={(value) => setFormData({ ...formData, alcohol: value })}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Выберите напиток" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Коньяк">Коньяк</SelectItem>
+                    <SelectItem value="Виски">Виски</SelectItem>
+                    <SelectItem value="Вино">Вино</SelectItem>
+                    <SelectItem value="Шампанское">Шампанское</SelectItem>
+                    <SelectItem value="Водка">Водка</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
                 <label className="block text-sm font-medium mb-2">Комментарий (необязательно)</label>
                 <Textarea 
                   placeholder="Особые пожелания или диетические ограничения"
@@ -311,7 +326,7 @@ const Index = () => {
 
       <section id="контакты" className="py-24 bg-card/50 relative">
         <div className="container mx-auto px-4">
-          <h2 className="text-6xl text-center mb-16 text-primary">Контакты</h2>
+          <h2 className="text-5xl text-center mb-16 text-primary">Контакты</h2>
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-1 gap-8 mb-12 max-w-md mx-auto">
               <Card className="p-8 text-center">

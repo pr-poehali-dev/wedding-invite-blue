@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import datetime
+import psycopg2
 
 def handler(event: dict, context) -> dict:
     """API для приёма подтверждений присутствия на свадьбе"""
@@ -37,6 +38,7 @@ def handler(event: dict, context) -> dict:
         name = body.get('name', '').strip()
         guests = body.get('guests', '1')
         comment = body.get('comment', '').strip()
+        alcohol = body.get('alcohol', '').strip()
         
         if not name:
             return {
@@ -64,6 +66,22 @@ def handler(event: dict, context) -> dict:
                 'isBase64Encoded': False
             }
         
+        dsn = os.environ.get('DATABASE_URL')
+        schema = os.environ.get('MAIN_DB_SCHEMA', 'public')
+        
+        conn = psycopg2.connect(dsn)
+        cur = conn.cursor()
+        
+        insert_query = f"""
+            INSERT INTO {schema}.wedding_guests (name, guests, alcohol, comment)
+            VALUES (%s, %s, %s, %s)
+        """
+        cur.execute(insert_query, (name, guests_count, alcohol if alcohol else None, comment if comment else None))
+        conn.commit()
+        
+        cur.close()
+        conn.close()
+        
         timestamp = datetime.now().isoformat()
         
         response_data = {
@@ -72,6 +90,7 @@ def handler(event: dict, context) -> dict:
             'data': {
                 'name': name,
                 'guests': guests_count,
+                'alcohol': alcohol,
                 'comment': comment,
                 'timestamp': timestamp
             }
