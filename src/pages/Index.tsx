@@ -108,12 +108,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      <div className="fixed inset-0 pointer-events-none z-0 flex items-center justify-center">
-        <div className="text-[10rem] font-bold text-primary/5 select-none leading-tight text-center">
-          Е<br />Н
-        </div>
-      </div>
-
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border">
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-center items-center gap-8">
