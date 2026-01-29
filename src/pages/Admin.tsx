@@ -131,12 +131,23 @@ const Admin = () => {
     }
 
     try {
+      console.log('Deleting guest:', guestId);
+      
       // Используем JSONP для обхода CORS
       const callbackName = `deleteCallback${Date.now()}`;
+      const url = `https://functions.poehali.dev/32c28659-d7a4-4c4e-bf24-5f8b9bc5a0f6?id=${guestId}&callback=${callbackName}`;
+      
+      console.log('JSONP URL:', url);
       
       await new Promise<void>((resolve, reject) => {
+        let scriptElement: HTMLScriptElement | null = null;
+        
         (window as any)[callbackName] = (data: any) => {
+          console.log('JSONP response:', data);
           delete (window as any)[callbackName];
+          if (scriptElement && scriptElement.parentNode) {
+            scriptElement.parentNode.removeChild(scriptElement);
+          }
           if (data.success) {
             resolve();
           } else {
@@ -144,18 +155,25 @@ const Admin = () => {
           }
         };
 
-        const script = document.createElement('script');
-        script.src = `https://functions.poehali.dev/32c28659-d7a4-4c4e-bf24-5f8b9bc5a0f6?id=${guestId}&callback=${callbackName}`;
-        script.onerror = () => {
+        scriptElement = document.createElement('script');
+        scriptElement.src = url;
+        scriptElement.onerror = () => {
+          console.error('Script load error');
           delete (window as any)[callbackName];
+          if (scriptElement && scriptElement.parentNode) {
+            scriptElement.parentNode.removeChild(scriptElement);
+          }
           reject(new Error('Не удалось загрузить скрипт'));
         };
-        document.body.appendChild(script);
+        document.body.appendChild(scriptElement);
         
         setTimeout(() => {
           if ((window as any)[callbackName]) {
+            console.error('Timeout waiting for response');
             delete (window as any)[callbackName];
-            document.body.removeChild(script);
+            if (scriptElement && scriptElement.parentNode) {
+              scriptElement.parentNode.removeChild(scriptElement);
+            }
             reject(new Error('Timeout'));
           }
         }, 5000);
@@ -167,6 +185,7 @@ const Admin = () => {
       });
       loadGuests();
     } catch (error) {
+      console.error('Delete error:', error);
       toast({
         title: 'Ошибка',
         description: error instanceof Error ? error.message : 'Не удалось удалить гостя',
