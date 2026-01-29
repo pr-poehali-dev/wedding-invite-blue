@@ -106,6 +106,18 @@ def handler(event: dict, context) -> dict:
         }
         
         print(f"Successfully saved guest: {name}, {guests_count} guests")
+        
+        # Проверяем нужен ли JSONP ответ
+        callback = params.get('callback', '')
+        if callback:
+            jsonp_response = f"{callback}({json.dumps(response_data)})"
+            return {
+                'statusCode': 200,
+                'headers': {**cors_headers, 'Content-Type': 'application/javascript'},
+                'body': jsonp_response,
+                'isBase64Encoded': False
+            }
+        
         return {
             'statusCode': 200,
             'headers': {**cors_headers, 'Content-Type': 'application/json'},

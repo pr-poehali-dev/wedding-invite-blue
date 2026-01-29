@@ -78,41 +78,56 @@ const Index = () => {
     try {
       console.log('Отправка данных:', formData);
       
-      // Формируем URL с query параметрами для обхода CORS
+      // Используем JSONP для обхода CORS (как с получением списка гостей)
+      const callbackName = `rsvpCallback${Date.now()}`;
+      
       const params = new URLSearchParams({
         name: formData.name,
         guests: formData.guests,
         alcohol: Array.isArray(formData.alcohol) ? formData.alcohol.join(', ') : formData.alcohol.toString(),
-        comment: formData.comment
+        comment: formData.comment,
+        callback: callbackName
       });
       
       const url = `https://functions.poehali.dev/73b1af17-d463-42f4-be57-6cb3b190a40f?${params.toString()}`;
-      const response = await fetch(url, { method: 'GET' });
       
-      console.log('Статус ответа:', response.status);
+      await new Promise((resolve, reject) => {
+        (window as any)[callbackName] = (data: any) => {
+          delete (window as any)[callbackName];
+          if (data.success) {
+            resolve(data);
+          } else {
+            reject(new Error(data.error || 'Ошибка отправки'));
+          }
+        };
 
-      const result = await response.json();
-      console.log('Ответ сервера:', result);
+        const script = document.createElement('script');
+        script.src = url;
+        script.onerror = () => {
+          delete (window as any)[callbackName];
+          reject(new Error('Не удалось загрузить скрипт'));
+        };
+        document.body.appendChild(script);
+        
+        setTimeout(() => {
+          if ((window as any)[callbackName]) {
+            delete (window as any)[callbackName];
+            document.body.removeChild(script);
+            reject(new Error('Timeout'));
+          }
+        }, 10000);
+      });
 
-      if (response.ok) {
-        toast({
-          title: 'Спасибо!',
-          description: 'Ваше подтверждение принято. Ждём вас на празднике! ❤️'
-        });
-        setFormData({ name: '', guests: '1', comment: '', alcohol: [] });
-      } else {
-        console.error('Ошибка от сервера:', result);
-        toast({
-          title: 'Ошибка',
-          description: result.error || 'Не удалось отправить подтверждение',
-          variant: 'destructive'
-        });
-      }
+      toast({
+        title: 'Спасибо!',
+        description: 'Ваше подтверждение принято. Ждём вас на празднике! ❤️'
+      });
+      setFormData({ name: '', guests: '1', comment: '', alcohol: [] });
     } catch (error) {
       console.error('Ошибка отправки:', error);
       toast({
         title: 'Ошибка',
-        description: 'Не удалось отправить подтверждение. Попробуйте позже.',
+        description: error instanceof Error ? error.message : 'Не удалось отправить подтверждение',
         variant: 'destructive'
       });
     } finally {
