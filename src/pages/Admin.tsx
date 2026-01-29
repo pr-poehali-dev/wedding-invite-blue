@@ -131,38 +131,31 @@ const Admin = () => {
     }
 
     try {
-      // Используем image trick для GET запроса (обход CORS без JSONP)
-      const url = `https://functions.poehali.dev/32c28659-d7a4-4c4e-bf24-5f8b9bc5a0f6?id=${guestId}&_t=${Date.now()}`;
+      // Используем fetch с no-cors режимом (запрос уйдет, но ответ не получим)
+      const url = `https://functions.poehali.dev/32c28659-d7a4-4c4e-bf24-5f8b9bc5a0f6?id=${guestId}&_nocache=${Date.now()}`;
       
-      console.log('Sending delete request:', url);
+      console.log('DELETE request URL:', url);
+      console.log('Guest ID:', guestId);
       
-      // Простой GET запрос через Image объект (не блокируется CORS)
-      await new Promise<void>((resolve, reject) => {
-        const timeout = setTimeout(() => {
-          // Считаем что запрос прошел (Image trick не дает узнать результат)
-          resolve();
-        }, 1000);
-        
-        const img = new Image();
-        img.onload = () => {
-          clearTimeout(timeout);
-          resolve();
-        };
-        img.onerror = () => {
-          clearTimeout(timeout);
-          // При error тоже считаем успехом (запрос отправился)
-          resolve();
-        };
-        img.src = url;
+      // Отправляем запрос в режиме no-cors (обход CORS, но без проверки ответа)
+      fetch(url, {
+        method: 'GET',
+        mode: 'no-cors',
+        cache: 'no-cache'
+      }).catch(err => {
+        console.log('Fetch error (expected in no-cors):', err);
       });
+      
+      // Ждем 1 секунду чтобы запрос успел уйти
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       toast({
         title: 'Успешно',
         description: 'Гость удалён'
       });
       
-      // Подождем немного и перезагрузим список
-      setTimeout(() => loadGuests(), 500);
+      // Перезагружаем список
+      loadGuests();
     } catch (error) {
       console.error('Delete error:', error);
       toast({
