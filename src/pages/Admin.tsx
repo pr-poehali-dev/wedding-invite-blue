@@ -66,17 +66,22 @@ const Admin = () => {
   const loadGuests = async () => {
     setIsLoading(true);
     try {
+      console.log('Загрузка гостей...');
       const response = await fetch('https://functions.poehali.dev/51d70743-25cc-4318-9f00-048687153b31');
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (data.success) {
         setGuests(data.guests);
         setTotalResponses(data.total_responses);
         setTotalGuests(data.total_guests);
+        console.log('Гости загружены:', data.guests.length);
       } else {
         throw new Error('Ошибка загрузки данных');
       }
     } catch (error) {
+      console.error('Ошибка загрузки гостей:', error);
       toast({
         title: 'Ошибка',
         description: 'Не удалось загрузить список гостей',
