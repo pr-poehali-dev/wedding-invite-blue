@@ -2,14 +2,8 @@
   "tests": [
     {
       "name": "Успешное подтверждение присутствия",
-      "method": "POST",
-      "path": "/",
-      "body": {
-        "name": "Иван Иванов",
-        "guests": "2",
-        "alcohol": "Коньяк",
-        "comment": "Без особых пожеланий"
-      },
+      "method": "GET",
+      "path": "/?name=Иван+Иванов&guests=2&alcohol=Коньяк&comment=Без+особых+пожеланий",
       "expectedStatus": 200,
       "expectedBody": {
         "success": true
@@ -18,13 +12,8 @@
     },
     {
       "name": "Отсутствие имени",
-      "method": "POST",
-      "path": "/",
-      "body": {
-        "name": "",
-        "guests": "1",
-        "alcohol": "Вино"
-      },
+      "method": "GET",
+      "path": "/?guests=1&alcohol=Вино",
       "expectedStatus": 400,
       "expectedBody": {
         "error": "string"
@@ -33,13 +22,8 @@
     },
     {
       "name": "Некорректное количество гостей",
-      "method": "POST",
-      "path": "/",
-      "body": {
-        "name": "Пётр Петров",
-        "guests": "0",
-        "alcohol": "Водка"
-      },
+      "method": "GET",
+      "path": "/?name=Пётр+Петров&guests=0&alcohol=Водка",
       "expectedStatus": 400,
       "expectedBody": {
         "error": "string"

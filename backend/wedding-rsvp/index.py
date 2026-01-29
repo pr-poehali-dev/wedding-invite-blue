@@ -4,7 +4,7 @@ from datetime import datetime
 import psycopg2
 
 def handler(event: dict, context) -> dict:
-    """API для приёма подтверждений присутствия на свадьбе"""
+    """API для приёма подтверждений присутствия на свадьбе через GET параметры (обход CORS)"""
     
     method = event.get('httpMethod', 'GET')
     print(f"RSVP Request: method={method}")
@@ -12,21 +12,11 @@ def handler(event: dict, context) -> dict:
     # CORS headers для всех ответов
     cors_headers = {
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': '*',
-        'Access-Control-Max-Age': '86400'
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': '*'
     }
     
-    if method == 'OPTIONS':
-        print("Returning OPTIONS response")
-        return {
-            'statusCode': 200,
-            'headers': cors_headers,
-            'body': '',
-            'isBase64Encoded': False
-        }
-    
-    if method != 'POST':
+    if method != 'GET':
         return {
             'statusCode': 405,
             'headers': {**cors_headers, 'Content-Type': 'application/json'},
@@ -35,24 +25,18 @@ def handler(event: dict, context) -> dict:
         }
     
     try:
-        body_raw = event.get('body', '{}')
-        print(f"Raw body: {body_raw[:200]}")  # Первые 200 символов
+        # Получаем данные из query параметров
+        params = event.get('queryStringParameters', {}) or {}
+        print(f"Query params: {params}")
         
-        body = json.loads(body_raw)
-        print(f"Parsed body: {body}")
-        
-        name = body.get('name', '').strip()
-        guests = body.get('guests', '1')
-        comment = body.get('comment', '').strip()
-        alcohol = body.get('alcohol', [])
+        name = params.get('name', '').strip()
+        guests = params.get('guests', '1')
+        comment = params.get('comment', '').strip()
+        alcohol = params.get('alcohol', '')  # Строка через запятую
         
         print(f"Extracted data: name={name}, guests={guests}, comment={comment}, alcohol={alcohol}")
         
-        # Преобразуем массив в строку через запятую
-        if isinstance(alcohol, list):
-            alcohol_str = ', '.join(alcohol) if alcohol else ''
-        else:
-            alcohol_str = str(alcohol).strip()
+        alcohol_str = alcohol.strip() if alcohol else ''
         
         if not name:
             return {
@@ -115,7 +99,7 @@ def handler(event: dict, context) -> dict:
             'data': {
                 'name': name,
                 'guests': guests_count,
-                'alcohol': alcohol,
+                'alcohol': alcohol_str,
                 'comment': comment,
                 'timestamp': timestamp
             }

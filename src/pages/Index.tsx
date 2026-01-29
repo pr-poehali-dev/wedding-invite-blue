@@ -77,13 +77,17 @@ const Index = () => {
 
     try {
       console.log('Отправка данных:', formData);
-      const response = await fetch('https://functions.poehali.dev/73b1af17-d463-42f4-be57-6cb3b190a40f', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
+      
+      // Формируем URL с query параметрами для обхода CORS
+      const params = new URLSearchParams({
+        name: formData.name,
+        guests: formData.guests,
+        alcohol: Array.isArray(formData.alcohol) ? formData.alcohol.join(', ') : formData.alcohol.toString(),
+        comment: formData.comment
       });
+      
+      const url = `https://functions.poehali.dev/73b1af17-d463-42f4-be57-6cb3b190a40f?${params.toString()}`;
+      const response = await fetch(url, { method: 'GET' });
       
       console.log('Статус ответа:', response.status);
 
