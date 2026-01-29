@@ -70,35 +70,53 @@ const Admin = () => {
   const loadGuests = async () => {
     setIsLoading(true);
     try {
-      console.log('Загрузка гостей...');
-      // Используем простой GET запрос без CORS
-      const response = await fetch('https://functions.poehali.dev/51d70743-25cc-4318-9f00-048687153b31', {
-        method: 'GET',
-        mode: 'cors',
-        credentials: 'omit'
+      console.log('Загрузка гостей через JSONP...');
+      
+      // Используем JSONP для обхода CORS
+      const callbackName = 'jsonpCallback' + Date.now();
+      const url = `https://functions.poehali.dev/288f8051-1f4e-467a-a42c-9f7625cf3a63?callback=${callbackName}`;
+      
+      const data: any = await new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        const timeout = setTimeout(() => {
+          cleanup();
+          reject(new Error('Timeout'));
+        }, 10000);
+        
+        const cleanup = () => {
+          clearTimeout(timeout);
+          script.remove();
+          delete (window as any)[callbackName];
+        };
+        
+        (window as any)[callbackName] = (data: any) => {
+          cleanup();
+          resolve(data);
+        };
+        
+        script.onerror = () => {
+          cleanup();
+          reject(new Error('Failed to load script'));
+        };
+        
+        script.src = url;
+        document.head.appendChild(script);
       });
       
-      console.log('Response status:', response.status);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
       console.log('Response data:', data);
 
       if (data.success) {
-        setGuests(data.guests);
-        setTotalResponses(data.total_responses);
-        setTotalGuests(data.total_guests);
-        console.log('Гости загружены:', data.guests.length);
+        setGuests(data.guests || []);
+        setTotalResponses(data.total_responses || 0);
+        setTotalGuests(data.total_guests || 0);
+        console.log('Гости загружены:', data.guests?.length || 0);
       } else {
-        throw new Error('Ошибка загрузки данных');
+        throw new Error(data.error || 'Ошибка загрузки данных');
       }
     } catch (error) {
       console.error('Ошибка загрузки гостей:', error);
       toast({
-        title: 'Ошибка',
+        title: 'Ошибка загрузки',
         description: error instanceof Error ? error.message : 'Не удалось загрузить список гостей',
         variant: 'destructive'
       });

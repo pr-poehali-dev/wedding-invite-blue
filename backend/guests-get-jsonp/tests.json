@@ -1,0 +1,10 @@
+{
+  "tests": [
+    {
+      "name": "Get guests JSONP",
+      "method": "GET",
+      "path": "/?callback=test",
+      "expectedStatus": 200
+    }
+  ]
+}
