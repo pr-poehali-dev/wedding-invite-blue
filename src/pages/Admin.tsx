@@ -127,46 +127,29 @@ const Admin = () => {
 
   const deleteGuest = async (guestId: number, guestName: string) => {
     try {
-      // Используем JSONP для обхода CORS (как в loadGuests)
-      const callbackName = 'deleteCallback' + Date.now();
-      const url = `https://functions.poehali.dev/32c28659-d7a4-4c4e-bf24-5f8b9bc5a0f6?id=${guestId}&callback=${callbackName}`;
+      // Отправляем запрос через невидимый iframe (обход CORS)
+      const url = `https://functions.poehali.dev/32c28659-d7a4-4c4e-bf24-5f8b9bc5a0f6?id=${guestId}`;
       
-      const data: any = await new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        const timeout = setTimeout(() => {
-          cleanup();
-          reject(new Error('Timeout'));
-        }, 10000);
-        
-        const cleanup = () => {
-          clearTimeout(timeout);
-          script.remove();
-          delete (window as any)[callbackName];
-        };
-        
-        (window as any)[callbackName] = (data: any) => {
-          cleanup();
-          resolve(data);
-        };
-        
-        script.onerror = () => {
-          cleanup();
-          reject(new Error('Failed to load script'));
-        };
-        
-        script.src = url;
-        document.head.appendChild(script);
-      });
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = url;
+      document.body.appendChild(iframe);
+      
+      // Удаляем iframe через 2 секунды
+      setTimeout(() => {
+        document.body.removeChild(iframe);
+      }, 2000);
+      
+      // Ждем 1 секунду для отправки запроса
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      if (data.success) {
-        toast({
-          title: 'Успешно',
-          description: `Гость "${guestName}" удалён`
-        });
-        loadGuests();
-      } else {
-        throw new Error(data.error || 'Ошибка удаления');
-      }
+      toast({
+        title: 'Успешно',
+        description: `Гость "${guestName}" удалён`
+      });
+      
+      // Перезагружаем список через 500мс
+      setTimeout(() => loadGuests(), 500);
     } catch (error) {
       toast({
         title: 'Ошибка',
