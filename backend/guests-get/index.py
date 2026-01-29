@@ -3,7 +3,7 @@ import os
 import psycopg2
 
 def handler(event: dict, context) -> dict:
-    """API для получения списка подтвердивших гостей"""
+    """API для получения списка подтвердивших гостей на свадьбу"""
     
     method = event.get('httpMethod', 'GET')
     
