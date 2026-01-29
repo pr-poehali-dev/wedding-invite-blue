@@ -126,18 +126,10 @@ const Admin = () => {
   };
 
   const deleteGuest = async (guestId: number, guestName: string) => {
-    if (!confirm(`Удалить гостя "${guestName}"?`)) {
-      return;
-    }
-
     try {
-      console.log('Удаление гостя через JSONP...');
-      
       // Используем JSONP для обхода CORS (как в loadGuests)
       const callbackName = 'deleteCallback' + Date.now();
       const url = `https://functions.poehali.dev/32c28659-d7a4-4c4e-bf24-5f8b9bc5a0f6?id=${guestId}&callback=${callbackName}`;
-      
-      console.log('URL:', url);
       
       const data: any = await new Promise((resolve, reject) => {
         const script = document.createElement('script');
@@ -165,20 +157,17 @@ const Admin = () => {
         script.src = url;
         document.head.appendChild(script);
       });
-      
-      console.log('Delete response:', data);
 
       if (data.success) {
         toast({
           title: 'Успешно',
-          description: 'Гость удалён'
+          description: `Гость "${guestName}" удалён`
         });
         loadGuests();
       } else {
         throw new Error(data.error || 'Ошибка удаления');
       }
     } catch (error) {
-      console.error('Delete error:', error);
       toast({
         title: 'Ошибка',
         description: error instanceof Error ? error.message : 'Не удалось удалить гостя',
