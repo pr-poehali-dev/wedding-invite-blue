@@ -71,14 +71,20 @@ const Admin = () => {
     setIsLoading(true);
     try {
       console.log('Загрузка гостей...');
-      const response = await fetch('https://functions.poehali.dev/51d70743-25cc-4318-9f00-048687153b31');
+      // Используем простой GET запрос без CORS
+      const response = await fetch('https://functions.poehali.dev/51d70743-25cc-4318-9f00-048687153b31', {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'omit'
+      });
+      
       console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers);
       
-      const text = await response.text();
-      console.log('Response text:', text);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       
-      const data = JSON.parse(text);
+      const data = await response.json();
       console.log('Response data:', data);
 
       if (data.success) {
@@ -91,10 +97,9 @@ const Admin = () => {
       }
     } catch (error) {
       console.error('Ошибка загрузки гостей:', error);
-      console.error('Error details:', error instanceof Error ? error.message : String(error));
       toast({
         title: 'Ошибка',
-        description: 'Не удалось загрузить список гостей',
+        description: error instanceof Error ? error.message : 'Не удалось загрузить список гостей',
         variant: 'destructive'
       });
     } finally {

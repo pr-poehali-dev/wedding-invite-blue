@@ -6,15 +6,20 @@ def handler(event: dict, context) -> dict:
     """API для получения списка подтвердивших гостей на свадьбу"""
     
     method = event.get('httpMethod', 'GET')
+    print(f"=== Request: method={method}")
+    print(f"=== Headers: {event.get('headers', {})}")
+    print(f"=== Origin: {event.get('headers', {}).get('origin', 'NO ORIGIN')}")
     
-    # CORS headers для всех ответов
+    # CORS headers для всех ответов  
     cors_headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
+        'Access-Control-Allow-Headers': '*',
+        'Access-Control-Max-Age': '86400'
     }
     
     if method == 'OPTIONS':
+        print("=== Returning OPTIONS response with CORS headers")
         return {
             'statusCode': 200,
             'headers': cors_headers,
