@@ -6,16 +6,20 @@ def handler(event: dict, context) -> dict:
     """API для удаления гостя из списка"""
     
     method = event.get('httpMethod', 'GET')
+    print(f"Delete request: method={method}")
+    
+    cors_headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': '*',
+        'Access-Control-Max-Age': '86400'
+    }
     
     if method == 'OPTIONS':
+        print("Returning OPTIONS response")
         return {
             'statusCode': 200,
-            'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'DELETE, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Max-Age': '86400'
-            },
+            'headers': cors_headers,
             'body': '',
             'isBase64Encoded': False
         }
@@ -23,37 +27,31 @@ def handler(event: dict, context) -> dict:
     if method != 'DELETE':
         return {
             'statusCode': 405,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            'headers': {**cors_headers, 'Content-Type': 'application/json'},
             'body': json.dumps({'error': 'Method not allowed'}),
             'isBase64Encoded': False
         }
     
     try:
-        body_str = event.get('body', '')
-        if not body_str or body_str == '{}':
-            return {
-                'statusCode': 400,
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                'body': json.dumps({'error': 'Не указан ID гостя'}),
-                'isBase64Encoded': False
-            }
+        # Сначала попробуем получить ID из query параметров
+        params = event.get('queryStringParameters', {}) or {}
+        guest_id = params.get('id')
         
-        body = json.loads(body_str)
-        guest_id = body.get('guest_id')
+        # Если нет в query, попробуем body
+        if not guest_id:
+            body_str = event.get('body', '')
+            print(f"Request body: {body_str}")
+            
+            if body_str and body_str != '{}':
+                body = json.loads(body_str)
+                guest_id = body.get('guest_id')
+        
+        print(f"Guest ID to delete: {guest_id}")
         
         if not guest_id:
             return {
                 'statusCode': 400,
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
+                'headers': {**cors_headers, 'Content-Type': 'application/json'},
                 'body': json.dumps({'error': 'Не указан ID гостя'}),
                 'isBase64Encoded': False
             }
@@ -70,12 +68,10 @@ def handler(event: dict, context) -> dict:
         if cur.rowcount == 0:
             cur.close()
             conn.close()
+            print("Guest not found")
             return {
                 'statusCode': 404,
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
+                'headers': {**cors_headers, 'Content-Type': 'application/json'},
                 'body': json.dumps({'error': 'Гость не найден'}),
                 'isBase64Encoded': False
             }
@@ -84,23 +80,19 @@ def handler(event: dict, context) -> dict:
         cur.close()
         conn.close()
         
+        print(f"Guest {guest_id} deleted successfully")
         return {
             'statusCode': 200,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            'headers': {**cors_headers, 'Content-Type': 'application/json'},
             'body': json.dumps({'success': True, 'message': 'Гость удалён'}),
             'isBase64Encoded': False
         }
     
     except Exception as e:
+        print(f"Error deleting guest: {str(e)}")
         return {
             'statusCode': 500,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            'headers': {**cors_headers, 'Content-Type': 'application/json'},
             'body': json.dumps({'error': f'Ошибка сервера: {str(e)}'}),
             'isBase64Encoded': False
         }

@@ -131,12 +131,9 @@ const Admin = () => {
     }
 
     try {
-      const response = await fetch('https://functions.poehali.dev/32c28659-d7a4-4c4e-bf24-5f8b9bc5a0f6', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ guest_id: guestId })
+      // Используем query параметры вместо body для обхода CORS
+      const response = await fetch(`https://functions.poehali.dev/32c28659-d7a4-4c4e-bf24-5f8b9bc5a0f6?id=${guestId}`, {
+        method: 'DELETE'
       });
 
       const data = await response.json();
