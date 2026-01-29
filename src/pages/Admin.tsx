@@ -131,13 +131,15 @@ const Admin = () => {
     }
 
     try {
-      console.log('Deleting guest:', guestId);
+      console.log('Deleting guest ID:', guestId, 'Type:', typeof guestId);
       
       // Используем JSONP для обхода CORS
       const callbackName = `deleteCallback${Date.now()}`;
-      const url = `https://functions.poehali.dev/32c28659-d7a4-4c4e-bf24-5f8b9bc5a0f6?id=${guestId}&callback=${callbackName}`;
+      const url = `https://functions.poehali.dev/32c28659-d7a4-4c4e-bf24-5f8b9bc5a0f6?id=${encodeURIComponent(guestId)}&callback=${encodeURIComponent(callbackName)}`;
       
-      console.log('JSONP URL:', url);
+      console.log('Full JSONP URL:', url);
+      console.log('Guest ID in URL:', guestId);
+      console.log('Callback name:', callbackName);
       
       await new Promise<void>((resolve, reject) => {
         let scriptElement: HTMLScriptElement | null = null;
