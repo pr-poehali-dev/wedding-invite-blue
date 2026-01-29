@@ -32,11 +32,15 @@ const Admin = () => {
   const { toast } = useToast();
 
   useEffect(() => {
+    console.log('useEffect запущен');
     const savedAuth = sessionStorage.getItem('admin_auth');
+    console.log('savedAuth:', savedAuth);
     if (savedAuth === 'true') {
+      console.log('Пользователь авторизован, загружаем гостей');
       setIsAuthenticated(true);
       loadGuests();
     } else {
+      console.log('Пользователь не авторизован');
       setIsLoading(false);
     }
   }, []);
