@@ -2,11 +2,8 @@
   "tests": [
     {
       "name": "Удаление несуществующего гостя",
-      "method": "DELETE",
-      "path": "/",
-      "body": {
-        "guest_id": 999999
-      },
+      "method": "GET",
+      "path": "/?id=999999",
       "expectedStatus": 200,
       "expectedBody": {
         "success": true
@@ -15,9 +12,8 @@
     },
     {
       "name": "Отсутствие ID гостя",
-      "method": "DELETE",
+      "method": "GET",
       "path": "/",
-      "body": {},
       "expectedStatus": 400,
       "expectedBody": {
         "error": "string"

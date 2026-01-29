@@ -131,26 +131,45 @@ const Admin = () => {
     }
 
     try {
-      // Используем query параметры вместо body для обхода CORS
-      const response = await fetch(`https://functions.poehali.dev/32c28659-d7a4-4c4e-bf24-5f8b9bc5a0f6?id=${guestId}`, {
-        method: 'DELETE'
+      // Используем JSONP для обхода CORS
+      const callbackName = `deleteCallback${Date.now()}`;
+      
+      await new Promise<void>((resolve, reject) => {
+        (window as any)[callbackName] = (data: any) => {
+          delete (window as any)[callbackName];
+          if (data.success) {
+            resolve();
+          } else {
+            reject(new Error(data.error || 'Ошибка удаления'));
+          }
+        };
+
+        const script = document.createElement('script');
+        script.src = `https://functions.poehali.dev/32c28659-d7a4-4c4e-bf24-5f8b9bc5a0f6?id=${guestId}&callback=${callbackName}`;
+        script.onerror = () => {
+          delete (window as any)[callbackName];
+          reject(new Error('Не удалось загрузить скрипт'));
+        };
+        document.body.appendChild(script);
+        
+        setTimeout(() => {
+          if ((window as any)[callbackName]) {
+            delete (window as any)[callbackName];
+            document.body.removeChild(script);
+            reject(new Error('Timeout'));
+          }
+        }, 5000);
       });
 
-      const data = await response.json();
-
-      if (data.success) {
-        toast({
-          title: 'Успешно',
-          description: 'Гость удалён'
-        });
-        loadGuests();
-      } else {
-        throw new Error(data.error || 'Ошибка удаления');
-      }
+      toast({
+        title: 'Успешно',
+        description: 'Гость удалён'
+      });
+      loadGuests();
     } catch (error) {
       toast({
         title: 'Ошибка',
-        description: 'Не удалось удалить гостя',
+        description: error instanceof Error ? error.message : 'Не удалось удалить гостя',
         variant: 'destructive'
       });
     }

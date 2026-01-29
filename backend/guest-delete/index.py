@@ -3,28 +3,16 @@ import os
 import psycopg2
 
 def handler(event: dict, context) -> dict:
-    """API для удаления гостя из списка"""
+    """API для удаления гостя через GET с JSONP (обход CORS)"""
     
     method = event.get('httpMethod', 'GET')
     print(f"Delete request: method={method}")
     
     cors_headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': '*',
-        'Access-Control-Max-Age': '86400'
+        'Access-Control-Allow-Origin': '*'
     }
     
-    if method == 'OPTIONS':
-        print("Returning OPTIONS response")
-        return {
-            'statusCode': 200,
-            'headers': cors_headers,
-            'body': '',
-            'isBase64Encoded': False
-        }
-    
-    if method != 'DELETE':
+    if method != 'GET':
         return {
             'statusCode': 405,
             'headers': {**cors_headers, 'Content-Type': 'application/json'},
@@ -33,20 +21,11 @@ def handler(event: dict, context) -> dict:
         }
     
     try:
-        # Сначала попробуем получить ID из query параметров
         params = event.get('queryStringParameters', {}) or {}
         guest_id = params.get('id')
+        callback = params.get('callback', '')
         
-        # Если нет в query, попробуем body
-        if not guest_id:
-            body_str = event.get('body', '')
-            print(f"Request body: {body_str}")
-            
-            if body_str and body_str != '{}':
-                body = json.loads(body_str)
-                guest_id = body.get('guest_id')
-        
-        print(f"Guest ID to delete: {guest_id}")
+        print(f"Guest ID to delete: {guest_id}, callback: {callback}")
         
         if not guest_id:
             return {
@@ -62,8 +41,9 @@ def handler(event: dict, context) -> dict:
         conn = psycopg2.connect(dsn)
         cur = conn.cursor()
         
-        delete_query = f"DELETE FROM {schema}.wedding_guests WHERE id = %s"
-        cur.execute(delete_query, (guest_id,))
+        # Simple Query Protocol (без параметризации)
+        delete_query = f"DELETE FROM {schema}.wedding_guests WHERE id = {int(guest_id)}"
+        cur.execute(delete_query)
         
         if cur.rowcount == 0:
             cur.close()
@@ -81,10 +61,22 @@ def handler(event: dict, context) -> dict:
         conn.close()
         
         print(f"Guest {guest_id} deleted successfully")
+        
+        response_data = {'success': True, 'message': 'Гость удалён'}
+        
+        if callback:
+            jsonp_response = f"{callback}({json.dumps(response_data)})"
+            return {
+                'statusCode': 200,
+                'headers': {**cors_headers, 'Content-Type': 'application/javascript'},
+                'body': jsonp_response,
+                'isBase64Encoded': False
+            }
+        
         return {
             'statusCode': 200,
             'headers': {**cors_headers, 'Content-Type': 'application/json'},
-            'body': json.dumps({'success': True, 'message': 'Гость удалён'}),
+            'body': json.dumps(response_data),
             'isBase64Encoded': False
         }
     
