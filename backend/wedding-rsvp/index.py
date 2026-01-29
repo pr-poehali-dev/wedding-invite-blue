@@ -74,11 +74,24 @@ def handler(event: dict, context) -> dict:
         conn = psycopg2.connect(dsn)
         cur = conn.cursor()
         
+        # Экранируем значения для Simple Query Protocol (без параметризации)
+        name_escaped = name.replace("'", "''")
+        comment_escaped = comment.replace("'", "''") if comment else None
+        alcohol_escaped = alcohol_str.replace("'", "''") if alcohol_str else None
+        
+        # Формируем значения для вставки
+        values = [
+            f"'{name_escaped}'",
+            str(guests_count),
+            f"'{alcohol_escaped}'" if alcohol_escaped else 'NULL',
+            f"'{comment_escaped}'" if comment_escaped else 'NULL'
+        ]
+        
         insert_query = f"""
             INSERT INTO {schema}.wedding_guests (name, guests, alcohol, comment)
-            VALUES (%s, %s, %s, %s)
+            VALUES ({', '.join(values)})
         """
-        cur.execute(insert_query, (name, guests_count, alcohol_str if alcohol_str else None, comment if comment else None))
+        cur.execute(insert_query)
         conn.commit()
         
         cur.close()
