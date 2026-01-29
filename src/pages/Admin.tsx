@@ -131,31 +131,52 @@ const Admin = () => {
     }
 
     try {
-      // Используем fetch с no-cors режимом (запрос уйдет, но ответ не получим)
-      const url = `https://functions.poehali.dev/32c28659-d7a4-4c4e-bf24-5f8b9bc5a0f6?id=${guestId}&_nocache=${Date.now()}`;
+      console.log('Удаление гостя через JSONP...');
       
-      console.log('DELETE request URL:', url);
-      console.log('Guest ID:', guestId);
+      // Используем JSONP для обхода CORS (как в loadGuests)
+      const callbackName = 'deleteCallback' + Date.now();
+      const url = `https://functions.poehali.dev/32c28659-d7a4-4c4e-bf24-5f8b9bc5a0f6?id=${guestId}&callback=${callbackName}`;
       
-      // Отправляем запрос в режиме no-cors (обход CORS, но без проверки ответа)
-      fetch(url, {
-        method: 'GET',
-        mode: 'no-cors',
-        cache: 'no-cache'
-      }).catch(err => {
-        console.log('Fetch error (expected in no-cors):', err);
+      console.log('URL:', url);
+      
+      const data: any = await new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        const timeout = setTimeout(() => {
+          cleanup();
+          reject(new Error('Timeout'));
+        }, 10000);
+        
+        const cleanup = () => {
+          clearTimeout(timeout);
+          script.remove();
+          delete (window as any)[callbackName];
+        };
+        
+        (window as any)[callbackName] = (data: any) => {
+          cleanup();
+          resolve(data);
+        };
+        
+        script.onerror = () => {
+          cleanup();
+          reject(new Error('Failed to load script'));
+        };
+        
+        script.src = url;
+        document.head.appendChild(script);
       });
       
-      // Ждем 1 секунду чтобы запрос успел уйти
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('Delete response:', data);
 
-      toast({
-        title: 'Успешно',
-        description: 'Гость удалён'
-      });
-      
-      // Перезагружаем список
-      loadGuests();
+      if (data.success) {
+        toast({
+          title: 'Успешно',
+          description: 'Гость удалён'
+        });
+        loadGuests();
+      } else {
+        throw new Error(data.error || 'Ошибка удаления');
+      }
     } catch (error) {
       console.error('Delete error:', error);
       toast({
