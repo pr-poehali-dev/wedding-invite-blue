@@ -35,12 +35,18 @@ def handler(event: dict, context) -> dict:
         }
     
     try:
-        body = json.loads(event.get('body', '{}'))
+        body_raw = event.get('body', '{}')
+        print(f"Raw body: {body_raw[:200]}")  # Первые 200 символов
+        
+        body = json.loads(body_raw)
+        print(f"Parsed body: {body}")
         
         name = body.get('name', '').strip()
         guests = body.get('guests', '1')
         comment = body.get('comment', '').strip()
         alcohol = body.get('alcohol', [])
+        
+        print(f"Extracted data: name={name}, guests={guests}, comment={comment}, alcohol={alcohol}")
         
         # Преобразуем массив в строку через запятую
         if isinstance(alcohol, list):
@@ -71,8 +77,10 @@ def handler(event: dict, context) -> dict:
         dsn = os.environ.get('DATABASE_URL')
         schema = os.environ.get('MAIN_DB_SCHEMA', 'public')
         
+        print(f"Connecting to database...")
         conn = psycopg2.connect(dsn)
         cur = conn.cursor()
+        print(f"Connected successfully")
         
         # Экранируем значения для Simple Query Protocol (без параметризации)
         name_escaped = name.replace("'", "''")
@@ -91,8 +99,10 @@ def handler(event: dict, context) -> dict:
             INSERT INTO {schema}.wedding_guests (name, guests, alcohol, comment)
             VALUES ({', '.join(values)})
         """
+        print(f"Executing query: {insert_query}")
         cur.execute(insert_query)
         conn.commit()
+        print(f"Query executed successfully")
         
         cur.close()
         conn.close()
