@@ -7,15 +7,17 @@ def handler(event: dict, context) -> dict:
     
     method = event.get('httpMethod', 'GET')
     
+    # CORS headers для всех ответов
+    cors_headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+    }
+    
     if method == 'OPTIONS':
         return {
             'statusCode': 200,
-            'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Max-Age': '86400'
-            },
+            'headers': cors_headers,
             'body': '',
             'isBase64Encoded': False
         }
@@ -23,10 +25,7 @@ def handler(event: dict, context) -> dict:
     if method != 'GET':
         return {
             'statusCode': 405,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            'headers': {**cors_headers, 'Content-Type': 'application/json'},
             'body': json.dumps({'error': 'Method not allowed'}),
             'isBase64Encoded': False
         }
@@ -74,10 +73,7 @@ def handler(event: dict, context) -> dict:
         
         return {
             'statusCode': 200,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            'headers': {**cors_headers, 'Content-Type': 'application/json'},
             'body': json.dumps(response_data),
             'isBase64Encoded': False
         }
@@ -85,10 +81,7 @@ def handler(event: dict, context) -> dict:
     except Exception as e:
         return {
             'statusCode': 500,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
-            'body': json.dumps({'error': f'Ошибка сервера: {str(e)}'}),
+            'headers': {**cors_headers, 'Content-Type': 'application/json'},
+            'body': json.dumps({'success': False, 'error': f'Ошибка сервера: {str(e)}'}),
             'isBase64Encoded': False
         }

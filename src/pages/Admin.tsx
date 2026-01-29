@@ -71,12 +71,7 @@ const Admin = () => {
     setIsLoading(true);
     try {
       console.log('Загрузка гостей...');
-      const response = await fetch('https://functions.poehali.dev/51d70743-25cc-4318-9f00-048687153b31', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
+      const response = await fetch('https://functions.poehali.dev/51d70743-25cc-4318-9f00-048687153b31');
       console.log('Response status:', response.status);
       console.log('Response headers:', response.headers);
       
