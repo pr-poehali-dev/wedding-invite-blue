@@ -76,6 +76,7 @@ const Index = () => {
     setIsSubmitting(true);
 
     try {
+      console.log('Отправка данных:', formData);
       const response = await fetch('https://functions.poehali.dev/73b1af17-d463-42f4-be57-6cb3b190a40f', {
         method: 'POST',
         headers: {
@@ -83,8 +84,11 @@ const Index = () => {
         },
         body: JSON.stringify(formData)
       });
+      
+      console.log('Статус ответа:', response.status);
 
       const result = await response.json();
+      console.log('Ответ сервера:', result);
 
       if (response.ok) {
         toast({
@@ -93,9 +97,15 @@ const Index = () => {
         });
         setFormData({ name: '', guests: '1', comment: '', alcohol: [] });
       } else {
-        throw new Error(result.error || 'Ошибка отправки');
+        console.error('Ошибка от сервера:', result);
+        toast({
+          title: 'Ошибка',
+          description: result.error || 'Не удалось отправить подтверждение',
+          variant: 'destructive'
+        });
       }
     } catch (error) {
+      console.error('Ошибка отправки:', error);
       toast({
         title: 'Ошибка',
         description: 'Не удалось отправить подтверждение. Попробуйте позже.',
