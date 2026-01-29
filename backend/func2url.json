@@ -1,3 +1,4 @@
 {
-  "guests-get-jsonp": "https://functions.poehali.dev/288f8051-1f4e-467a-a42c-9f7625cf3a63"
+  "guests-get-jsonp": "https://functions.poehali.dev/288f8051-1f4e-467a-a42c-9f7625cf3a63",
+  "wedding-rsvp": "https://functions.poehali.dev/73b1af17-d463-42f4-be57-6cb3b190a40f"
 }

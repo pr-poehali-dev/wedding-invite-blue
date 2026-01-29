@@ -7,16 +7,21 @@ def handler(event: dict, context) -> dict:
     """API для приёма подтверждений присутствия на свадьбе"""
     
     method = event.get('httpMethod', 'GET')
+    print(f"RSVP Request: method={method}")
+    
+    # CORS headers для всех ответов
+    cors_headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': '*',
+        'Access-Control-Max-Age': '86400'
+    }
     
     if method == 'OPTIONS':
+        print("Returning OPTIONS response")
         return {
             'statusCode': 200,
-            'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Max-Age': '86400'
-            },
+            'headers': cors_headers,
             'body': '',
             'isBase64Encoded': False
         }
@@ -24,10 +29,7 @@ def handler(event: dict, context) -> dict:
     if method != 'POST':
         return {
             'statusCode': 405,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            'headers': {**cors_headers, 'Content-Type': 'application/json'},
             'body': json.dumps({'error': 'Method not allowed'}),
             'isBase64Encoded': False
         }
@@ -49,10 +51,7 @@ def handler(event: dict, context) -> dict:
         if not name:
             return {
                 'statusCode': 400,
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
+                'headers': {**cors_headers, 'Content-Type': 'application/json'},
                 'body': json.dumps({'error': 'Имя обязательно'}),
                 'isBase64Encoded': False
             }
@@ -64,10 +63,7 @@ def handler(event: dict, context) -> dict:
         except (ValueError, TypeError):
             return {
                 'statusCode': 400,
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
+                'headers': {**cors_headers, 'Content-Type': 'application/json'},
                 'body': json.dumps({'error': 'Некорректное количество гостей'}),
                 'isBase64Encoded': False
             }
@@ -102,33 +98,27 @@ def handler(event: dict, context) -> dict:
             }
         }
         
+        print(f"Successfully saved guest: {name}, {guests_count} guests")
         return {
             'statusCode': 200,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            'headers': {**cors_headers, 'Content-Type': 'application/json'},
             'body': json.dumps(response_data),
             'isBase64Encoded': False
         }
         
     except json.JSONDecodeError:
+        print("JSON decode error")
         return {
             'statusCode': 400,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            'headers': {**cors_headers, 'Content-Type': 'application/json'},
             'body': json.dumps({'error': 'Некорректный JSON'}),
             'isBase64Encoded': False
         }
     except Exception as e:
+        print(f"Error: {str(e)}")
         return {
             'statusCode': 500,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            'headers': {**cors_headers, 'Content-Type': 'application/json'},
             'body': json.dumps({'error': f'Внутренняя ошибка: {str(e)}'}),
             'isBase64Encoded': False
         }
