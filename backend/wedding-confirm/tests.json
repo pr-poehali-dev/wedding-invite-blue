@@ -1,0 +1,10 @@
+{
+  "tests": [
+    {
+      "name": "RSVP returns PNG",
+      "method": "GET",
+      "path": "/?name=Test&guests=2&alcohol=Wine",
+      "expectedStatus": 200
+    }
+  ]
+}
