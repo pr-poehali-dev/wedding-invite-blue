@@ -76,47 +76,28 @@ const Index = () => {
     setIsSubmitting(true);
 
     try {
-      console.log('Отправка данных:', formData);
-      
-      // Используем JSONP для обхода CORS (как с получением списка гостей)
-      const callbackName = `rsvpCallback${Date.now()}`;
-      
+      // Отправляем через невидимый iframe (обход CORS)
       const params = new URLSearchParams({
         name: formData.name,
         guests: formData.guests,
         alcohol: Array.isArray(formData.alcohol) ? formData.alcohol.join(', ') : formData.alcohol.toString(),
-        comment: formData.comment,
-        callback: callbackName
+        comment: formData.comment
       });
       
       const url = `https://functions.poehali.dev/73b1af17-d463-42f4-be57-6cb3b190a40f?${params.toString()}`;
       
-      await new Promise((resolve, reject) => {
-        (window as any)[callbackName] = (data: any) => {
-          delete (window as any)[callbackName];
-          if (data.success) {
-            resolve(data);
-          } else {
-            reject(new Error(data.error || 'Ошибка отправки'));
-          }
-        };
-
-        const script = document.createElement('script');
-        script.src = url;
-        script.onerror = () => {
-          delete (window as any)[callbackName];
-          reject(new Error('Не удалось загрузить скрипт'));
-        };
-        document.body.appendChild(script);
-        
-        setTimeout(() => {
-          if ((window as any)[callbackName]) {
-            delete (window as any)[callbackName];
-            document.body.removeChild(script);
-            reject(new Error('Timeout'));
-          }
-        }, 10000);
-      });
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = url;
+      document.body.appendChild(iframe);
+      
+      // Удаляем iframe через 2 секунды
+      setTimeout(() => {
+        document.body.removeChild(iframe);
+      }, 2000);
+      
+      // Ждем 1 секунду для отправки запроса
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       toast({
         title: 'Спасибо!',
@@ -124,10 +105,9 @@ const Index = () => {
       });
       setFormData({ name: '', guests: '1', comment: '', alcohol: [] });
     } catch (error) {
-      console.error('Ошибка отправки:', error);
       toast({
         title: 'Ошибка',
-        description: error instanceof Error ? error.message : 'Не удалось отправить подтверждение',
+        description: 'Не удалось отправить подтверждение',
         variant: 'destructive'
       });
     } finally {
