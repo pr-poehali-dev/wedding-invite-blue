@@ -76,28 +76,22 @@ const Index = () => {
     setIsSubmitting(true);
 
     try {
-      // Отправляем через невидимый iframe (обход CORS)
+      // Отправляем через Image (работает без CORS)
       const params = new URLSearchParams({
         name: formData.name,
         guests: formData.guests,
         alcohol: Array.isArray(formData.alcohol) ? formData.alcohol.join(', ') : formData.alcohol.toString(),
-        comment: formData.comment
+        comment: formData.comment,
+        _: Date.now().toString()
       });
       
       const url = `https://functions.poehali.dev/73b1af17-d463-42f4-be57-6cb3b190a40f?${params.toString()}`;
       
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = url;
-      document.body.appendChild(iframe);
+      const img = new Image();
+      img.src = url;
       
-      // Удаляем iframe через 2 секунды
-      setTimeout(() => {
-        document.body.removeChild(iframe);
-      }, 2000);
-      
-      // Ждем 1 секунду для отправки запроса
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Ждем 800мс для отправки
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       toast({
         title: 'Спасибо!',
